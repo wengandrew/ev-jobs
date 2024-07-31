@@ -12,9 +12,6 @@ University of Michigan
 
 Data Correspondence: asweng@umich.edu, oyahmed@umich.edu
 
-Requires:
-Matlab Mapping Toolbox
-
 %}
 
 %% Clear all and set default plot settings
