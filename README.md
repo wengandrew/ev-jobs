@@ -8,6 +8,8 @@ Authors: Andrew Weng, Omar Y. Ahmed, Gabriel Ehrlich, Anna Stefanopoulou
 
 ## Getting Started
 
-The source code is written in MATLAB with the Mapping Toolbox installed.
+The source code is written in Matlab.
 
-Most of the figures can be reproduced by running `make_figures.m` from the home directory. The labor intensity forecast can be reproduced by running `make_simulation.m`
+The figures can be reproduced by running `make_figure_... .m` from the home directory. 
+
+Key datasets from the figures have been exported and can be found under `data/Figures`.
