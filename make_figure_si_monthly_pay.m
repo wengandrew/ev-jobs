@@ -23,17 +23,18 @@ pay_ala = readmatrix('data/QWI/Pay_Alameda_3361_Quarterly.xlsx','range','B:B','n
 
 figure()
 clf
-t = tiledlayout(1,1,'padding','compact');
-ax1 = nexttile;
+% t = tiledlayout(1,1,'padding','compact');
+% ax1 = nexttile;
 hold on
 plot(2004:.25:2022.75,pay_ala*1e-3,'linewidth',2,'display','Alameda, CA');
 plot(2004:.25:2021.75,pay_oak*1e-3,'linewidth',2,'display','Oakland, MI');
 legend('show','location','nw')
 ylabel('Assembly Worker Monthly Pay ($k)')
+xlabel('Year')
 xlim([2004,2023])
 ylim([5,21])
 xticks(2004:6:2023)
 box on
-t.Units = 'inches';
-t.OuterPosition(3:4) = [6 5.5];
+% t.Units = 'inches';
+% t.OuterPosition(3:4) = [6 5.5];
 %exportgraphics(t,'Monthly_Pay_Alameda_Oakland.png','resolution',600)
