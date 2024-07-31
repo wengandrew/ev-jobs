@@ -1,4 +1,3 @@
-function make_simulation()
 % Develop a forecast of future labor intensity based on Alameda's data vs
 % national trends. The metric to focus on is WPV: workers per vehicle per
 % annum.
@@ -51,20 +50,22 @@ for i = 1:1000
 
 end
 
-line(base_years_projected-2010, base_projected, 'LineWidth', 1.5, 'Color', '#0b389d', 'LineStyle', '--', 'HandleVisibility', 'off')
-line(ev_years_projected-2010, f(ev_years_projected), 'LineWidth', 1.5, 'Color', '#3c821f', 'LineStyle', '--', 'HandleVisibility', 'off')
-
 line(years-2010, ev_wpv, 'Color', '#3c821f', 'LineWidth', 1.0, 'LineStyle', '-', 'HandleVisibility', 'off')
-line(nan, nan, 'Color', '#3c821f', 'LineWidth', 1.5, 'LineStyle', '-', 'DisplayName', 'BEV (Alameda, Govt)', 'Marker', 'o', 'MarkerFaceColor', '#3c821f')
-line(ev_lim_years-2010, ev_lim_wpv, 'Color', '#3c821f', 'LineWidth', 1.5, 'LineStyle', 'none', 'HandleVisibility', 'off', 'Marker', 'o', 'MarkerFaceColor', '#3c821f')
+line(base_lim_years-2010, base_lim_wpv, 'Color', '#0b389d', 'LineWidth', 1.5, 'LineStyle', 'none', 'HandleVisibility', 'off', 'DisplayName', 'Baseline (U.S. Average)', 'Marker', 'o', 'MarkerFaceColor', '#0b389d')
+line(nan, nan, 'Color', '#0b389d', 'LineWidth', 1.5, 'LineStyle', '-', 'DisplayName', 'Baseline (U.S. Average)', 'Marker', 'o', 'MarkerFaceColor', '#0b389d')
+line(nan, nan, 'Color', '#3c821f', 'LineWidth', 1.5, 'LineStyle', '-', 'DisplayName', 'BEV (Alameda)', 'Marker', 'o', 'MarkerFaceColor', '#3c821f')
+line(ev_lim_years-2010, ev_lim_wpv, 'Color', '#3c821f', 'LineWidth', 1.5, 'LineStyle', 'none', 'HandleVisibility', 'off', 'DisplayName', 'BEV (Alameda)', 'Marker', 'o', 'MarkerFaceColor', '#3c821f')
 line(years-2010, base_wpv, 'Color', '#0b389d', 'LineWidth', 1.0, 'LineStyle', '-', 'HandleVisibility', 'off')
-line(base_lim_years-2010, base_lim_wpv, 'Color', '#0b389d', 'LineWidth', 1.5, 'LineStyle', 'none', 'DisplayName', 'Baseline (U.S. Average)', 'Marker', 'o', 'MarkerFaceColor', '#0b389d')
 
-xlabel({'Years from BEV Factory Open'})
+line(base_years_projected-2010, base_projected, 'LineWidth', 1.5, 'Color', '#0b389d', 'LineStyle', '--', 'DisplayName', 'Baseline Projection')
+line(ev_years_projected-2010, f(ev_years_projected), 'LineWidth', 1.5, 'Color', '#3c821f', 'LineStyle', '--', 'DisplayName', 'BEV Projection')
+
+line(nan, nan, 'LineWidth', 1, 'Color', [0.4, 0.8, 0.4, 1], 'DisplayName', 'Monte Carlo Simulations')
+
+
+xlabel({'Years from BEV Factory Opening'})
 ylabel('Labor Intensity (WPV)')
 legend show
 
 ylim([0, 180])
 xlim([0, 25])
-
-end

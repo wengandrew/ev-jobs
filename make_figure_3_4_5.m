@@ -2,7 +2,8 @@
 
 Data Organization and Figure Making Code for
 
-"30% fewer workers for electric vehicle assembly": harbinger or myth? in Nature Communications
+"30% fewer workers for electric vehicle assembly": harbinger or myth? 
+
 Authors: Andrew Weng, Omar Y. Ahmed, Gabriel Ehrlich, Anna Stefanopoulou
 
 Department of Mechanical Engineering
@@ -21,118 +22,6 @@ clc
 clear variables
 close all
 init_plot_settings()
-
-%% U.S. Auto Manufacturing Workers
-file_QCEW = 'data/QCEW/Employment_US.xlsx';
-year_span = readmatrix(file_QCEW,'range','C1');
-year_span = year_span(1,:);
-emp_1013 = readmatrix(file_QCEW,'sheet','1013','range','C2');
-emp_3361 = readmatrix(file_QCEW,'sheet','3361','range','C2');
-emp_3363 = readmatrix(file_QCEW,'sheet','3363','range','C2');
-emp_33631 = readmatrix(file_QCEW,'sheet','33631','range','C2');
-emp_33632 = readmatrix(file_QCEW,'sheet','33632','range','C2');
-emp_33633 = readmatrix(file_QCEW,'sheet','33633','range','C2');
-emp_33634 = readmatrix(file_QCEW,'sheet','33634','range','C2');
-emp_33635 = readmatrix(file_QCEW,'sheet','33635','range','C2');
-emp_33636 = readmatrix(file_QCEW,'sheet','33636','range','C2');
-emp_33637 = readmatrix(file_QCEW,'sheet','33637','range','C2');
-emp_33639 = readmatrix(file_QCEW,'sheet','33639','range','C2');
-
-figure()
-clf
-t = tiledlayout(1,1,'padding','tight','tilespacing','compact');
-
-ax1 = nexttile;
-hold on
-fill([year_span,fliplr(year_span)],[emp_3363,fliplr(emp_3363+emp_3361)]*1e-6,'b','facecolor',[110 157 235]./255,'edgecolor','black','display','Assembly (NAICS 3361)')
-fill([year_span,fliplr(year_span)],[emp_3363-emp_33635,fliplr(emp_3363)]*1e-6,'b','facecolor',[137 137 137]./255,'edgecolor','black','display','Powertrain (NAICS 33635)')
-fill([year_span,fliplr(year_span)],[emp_3363-emp_33631-emp_33635,fliplr(emp_3363-emp_33635)]*1e-6,'b','facecolor',[183 183 183]./255,'edgecolor','black','display','Engine (NAICS 33631)')
-fill([year_span,fliplr(year_span)],[repelem(0,length(year_span)),fliplr(emp_3363-emp_33631-emp_33635)]*1e-6,'b','facecolor',[204 204 204]./255,'edgecolor','black','display','Other Parts (NAICS 3363x)')
-text(mean(year_span),.6,'Assembly','HorizontalAlignment','center','fontsize',16)
-text(mean(year_span),.465,'Powertrain Parts','HorizontalAlignment','center','fontsize',16,'Rotation',22)
-text(mean(year_span),.41,'Engine Parts','HorizontalAlignment','center','fontsize',16,'Rotation',22)
-% text(mean(year_span),.2,['Other Parts: Electrical, Suspension, Steering,',newline,'Brakes, Seating, Trim, and Metal Stamping'],'HorizontalAlignment','center','fontsize',16)
-text(mean(year_span),.2,'Other Parts','HorizontalAlignment','center','fontsize',16)
-xlabel('Year')
-ylabel('U.S. Auto Manufacturing Workers (Millions)')
-xlim([year_span(1),year_span(end)])
-xticks(2004:6:2022)
-ylim([0,1])
-yyaxis right
-plot(year_span,emp_1013*1e-6,'linestyle','-.','color',.5*ones(1,3),'linewidth',2,'display','All Manufacturing Workers (Right Axis)')
-% text(2009,13.6,'\it{All U.S. Manufacturing}','color',.5*ones(1,3),'fontsize',16)
-text(2019.5,13,'$\longrightarrow$','color',.5*ones(1,3),'fontsize',28,'interpreter','latex')
-set(gca,'YColor',.5*ones(1,3))
-ylabel('All U.S. Manufacturing Workers (Millions)')
-ylim([0,15])
-box on
-t.Units = 'inches';
-t.OuterPosition(3:4) = [8 7];
-%exportgraphics(t,'US_auto_manuf_workers.png','resolution',600)
-
-
-%% U.S. Map with Jobs and Assembly Locations
-file_QCEW = 'data/QCEW/Employment_State.xlsx';
-year_span = readmatrix(file_QCEW,'range','C1');
-year_span = year_span(1,:);
-emp_3361 = readmatrix(file_QCEW,'sheet','3361','range','C2');
-emp_year = emp_3361(:,year_span==2022).*1e-3;
-emp_year(isnan(emp_year)) = -1;
-state_names = readtable(file_QCEW,'Range','A:A');
-state_names = string(state_names.Area);
-for j = 1:length(state_names)
-    if endsWith(state_names(j),' -- Statewide')
-        new_name = char(state_names(j));
-        state_names(j) = new_name(1:end-13);
-    end
-end
-states = readgeotable("usastatelo.shp");
-state_emp = table(state_names,emp_year,'variablenames',{'State','Employees'});
-x = outerjoin(states,state_emp,"LeftKey","Name","RightKey","State");
-rows = x.Name ~= "Hawaii" & x.Name ~= "Alaska";
-y = x(rows,:);
-car_plants = readtable('data/Car_Plants_2022.xlsx','range','A:D');
-car_plants.EV(isnan(car_plants.EV)) = 0;
-
-figure()
-clf
-t = tiledlayout(1,1,'padding','tight');
-
-ax1 = nexttile;
-geoplot(y,ColorVariable="Employees");
-hold on
-loc_ICE = geoplot(car_plants.Latitude(car_plants.EV==0),car_plants.Longitude(car_plants.EV==0),'o','MarkerFaceColor',.7*ones(1,3),'MarkerEdgeColor','black','linewidth',.5,'display','ICEV Plant');
-%loc_mix = geoplot(car_plants.Latitude(car_plants.EV==1),car_plants.Longitude(car_plants.EV==1),'o','MarkerFaceColor','#0072BD','MarkerEdgeColor','black','display','ICEV \& EV Plant');
-loc_EV = geoplot(car_plants.Latitude(car_plants.EV==2),car_plants.Longitude(car_plants.EV==2),'o','MarkerFaceColor','#50C878','MarkerEdgeColor','black','linewidth',.5,'display','EV Plant');
-loc_trans = geoplot(car_plants.Latitude(car_plants.EV==3),car_plants.Longitude(car_plants.EV==3),'p','MarkerFaceColor','#50C878','MarkerEdgeColor','black','linewidth',.5,'display','Transition Plant (ICEV to EV)','markersize',15);
-coord_a = [31,-122];
-geoplot([coord_a(1),car_plants.Latitude(47)],[coord_a(2),car_plants.Longitude(47)],'black')
-text(coord_a(1),coord_a(2),'Alameda','HorizontalAlignment','center','backgroundcolor','white','margin',1)
-coord_b = [48,-77];
-geoplot([coord_b(1),car_plants.Latitude(29)],[coord_b(2),car_plants.Longitude(29)],'black')
-text(coord_b(1),coord_b(2),'Oakland','HorizontalAlignment','center','backgroundcolor','white','margin',1)
-coord_c = [50,-90];
-geoplot([coord_c(1),car_plants.Latitude(44)],[coord_c(2),car_plants.Longitude(44)],'black')
-text(coord_c(1),coord_c(2),'McLean','HorizontalAlignment','center','backgroundcolor','white','margin',1)
-legend([loc_ICE,loc_EV,loc_trans],'location','n','orientation','horizontal')
-cmap = interp1(linspace(0,1,6),[252, 251, 249;215, 220, 234;161, 179, 215;101, 129, 191;47, 87, 171;11, 56, 157]./255,linspace(0,1,100)); %blue
-colormap([.5*ones(1,3);cmap]);
-cb = colorbar;
-cb.Label.String = "Auto Assembly Workers (1,000s)";
-cb.Location = 'south';
-cb.Limits = [0,45];
-cb.FontSize = 10;
-gx = gca;
-gx.Basemap = 'none';
-gx.Grid = 'off';
-gx.LatitudeAxis.Visible = 'off';
-gx.LongitudeAxis.Visible = 'off';
-gx.Scalebar.Visible = "off";
-geolimits([15.3977   54.3065],[-126.1638  -65.5263])
-
-t.Units = 'inches';
-t.OuterPosition(3:4) = [5 4];
-% exportgraphics(t,'US_auto_manuf_map.png','resolution',600)
 
 %% Import and organize data for 3 transition plants and U.S. into "EV_data" struct
 year_span = 2004:2022;
@@ -228,6 +117,7 @@ if ~isequal(veh_all,veh_ICE+veh_EV)
 end
 pen_EV = veh_EV./veh_all.*100;
 pen_EV(isnan(pen_EV))=0;
+
 EV_data(k).veh_all = veh_all;
 EV_data(k).veh_ICE = veh_ICE;
 EV_data(k).veh_EV = veh_EV;
@@ -414,6 +304,15 @@ t.Units = 'inches';
 t.OuterPosition(3:4) = [6 10];
 %exportgraphics(t,[fig_name,'_labor_intensity.png'],'resolution',600)
 
+% Format and write output source data files
+data_table_prod = table(year_span', veh', 'VariableNames', {'Year', 'Production'});
+data_table_emp_gov = table(year_span', emp', wpv_adj', US_wpv', 'VariableNames', {'Year', 'Employment (Gov)', 'WPV (Gov)', 'WPV (US)'});
+data_table_emp_news = table(year_span_news', emp_news', wpv_news', 'VariableNames', {'Year', 'Employment (News)', 'WPV (News)'});
+writetable(data_table_prod, 'source_fig3_alameda_production.csv')
+writetable(data_table_emp_gov, 'source_fig3_alameda_employment_wpv_govt.csv')
+writetable(data_table_emp_news, 'source_fig3_alameda_employmnet_wpv_news.csv')
+
+
 %% Oakland Labor Intensity
 fig_name = 'Oakland';
 k = 3;
@@ -480,6 +379,12 @@ t.Units = 'inches';
 t.OuterPosition(3:4) = [6 10];
 %exportgraphics(t,[fig_name,'_labor_intensity.png'],'resolution',600)
 
+% Format and write output source data files
+data_table_prod = table(year_span', veh', 'VariableNames', {'Year', 'Production'});
+data_table_emp_gov = table(year_span', emp', wpv_adj', US_wpv', 'VariableNames', {'Year', 'Employment (Gov)', 'WPV (Gov)', 'WPV (US)'});
+writetable(data_table_prod, 'source_fig4_oakland_production.csv')
+writetable(data_table_emp_gov, 'source_fig4_oakland_employment_wpv_govt.csv')
+
 %% McLean Labor Intensity
 fig_name = 'McLean';
 k = 2;
@@ -539,6 +444,11 @@ t.Units = 'inches';
 t.OuterPosition(3:4) = [6 10];
 %exportgraphics(t,[fig_name,'_labor_intensity.png'],'resolution',600)
 
+% Format and write output source data files
+data_table_prod = table(year_span', veh', 'VariableNames', {'Year', 'Production'});
+data_table_emp_news = table(year_span_news', emp_news', wpv_news', 'VariableNames', {'Year', 'Employment (News)', 'WPV (News)'});
+writetable(data_table_prod, 'source_fig5_mclean_production.csv')
+writetable(data_table_emp_news, 'source_fig5_mclean_employment_wpv_news.csv')
 
 %% U.S. Labor Intensity
 fig_name = 'US';
@@ -593,24 +503,3 @@ ax1.XLim = [year_span(1),year_span(end)+1];
 t.Units = 'inches';
 t.OuterPosition(3:4) = [6 10];
 %exportgraphics(t,[fig_name,'_labor_intensity.png'],'resolution',600)
-
-%% Monthly Pay of Assembly Workers in Alameda and Oakland
-pay_oak = readmatrix('data/QWI/Pay_Oakland_3361_Quarterly.xlsx','range','B:B','numheaderlines',1);
-pay_ala = readmatrix('data/QWI/Pay_Alameda_3361_Quarterly.xlsx','range','B:B','numheaderlines',1);
-
-figure()
-clf
-t = tiledlayout(1,1,'padding','compact');
-ax1 = nexttile;
-hold on
-plot(2004:.25:2022.75,pay_ala*1e-3,'linewidth',2,'display','Alameda, CA');
-plot(2004:.25:2021.75,pay_oak*1e-3,'linewidth',2,'display','Oakland, MI');
-legend('show','location','nw')
-ylabel('Assembly Worker Monthly Pay ($k)')
-xlim([2004,2023])
-ylim([5,21])
-xticks(2004:6:2023)
-box on
-t.Units = 'inches';
-t.OuterPosition(3:4) = [6 5.5];
-%exportgraphics(t,'Monthly_Pay_Alameda_Oakland.png','resolution',600)
