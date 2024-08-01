@@ -22,4 +22,4 @@ Key datasets from the figures have been exported and can be found under `data/Fi
 
 Summarized government employment data is stored under `data/`.
 
-Summarized vehicle production data is available to subscribers of Automotive News Research & Data Center (https://datacenter.autonews.com/). The authors will make this data available upon resquest; please include evidence of your subscription in your request.
+Summarized vehicle production data is available to Automotive News Research & Data Center subscribers (https://datacenter.autonews.com/). The authors will make this data available upon request; please include evidence of your subscription in your request.
