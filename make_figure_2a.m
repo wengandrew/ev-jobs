@@ -23,6 +23,8 @@ clear variables
 close all
 init_plot_settings()
 
+fontsize = 16;
+
 %% U.S. Map with Jobs and Assembly Locations
 file_QCEW = 'data/QCEW/Employment_State.xlsx';
 year_span = readmatrix(file_QCEW,'range','C1');
@@ -46,33 +48,35 @@ y = x(rows,:);
 car_plants = readtable('data/Car_Plants_2022.xlsx','range','A:D');
 car_plants.EV(isnan(car_plants.EV)) = 0;
 
+%% Make the figure
 figure()
-clf
-t = tiledlayout(1,1,'padding','tight');
 
-ax1 = nexttile;
 geoplot(y,ColorVariable="Employees");
+
 hold on
-loc_ICE = geoplot(car_plants.Latitude(car_plants.EV==0),car_plants.Longitude(car_plants.EV==0),'o','MarkerFaceColor',.7*ones(1,3),'MarkerEdgeColor','black','linewidth',.5,'display','ICEV Plant');
-loc_EV = geoplot(car_plants.Latitude(car_plants.EV==2),car_plants.Longitude(car_plants.EV==2),'o','MarkerFaceColor','#50C878','MarkerEdgeColor','black','linewidth',.5,'display','EV Plant');
-loc_trans = geoplot(car_plants.Latitude(car_plants.EV==3),car_plants.Longitude(car_plants.EV==3),'p','MarkerFaceColor','#50C878','MarkerEdgeColor','black','linewidth',.5,'display','Transition Plant (ICEV to EV)','markersize',15);
+loc_ICE = geoplot(car_plants.Latitude(car_plants.EV==0),car_plants.Longitude(car_plants.EV==0),'o','MarkerFaceColor','black','MarkerEdgeColor','black','linewidth',.5,'markersize', 6, 'display','ICEV Plant');
+loc_EV = geoplot(car_plants.Latitude(car_plants.EV==2),car_plants.Longitude(car_plants.EV==2),'o','MarkerFaceColor','#50C878','MarkerEdgeColor','black','linewidth',.5,'markersize', 6, 'display','EV Plant');
+loc_trans = geoplot(car_plants.Latitude(car_plants.EV==3),car_plants.Longitude(car_plants.EV==3),'p','MarkerFaceColor','#50C878','MarkerEdgeColor','black','linewidth',.5,'display','Transition Plant (ICEV to EV)','markersize',26);
+
 coord_a = [31,-122];
 geoplot([coord_a(1),car_plants.Latitude(47)],[coord_a(2),car_plants.Longitude(47)],'black')
-text(coord_a(1),coord_a(2),'Alameda','HorizontalAlignment','center','backgroundcolor','white','margin',1)
+text(coord_a(1),coord_a(2),'Alameda','HorizontalAlignment','center','backgroundcolor','white','margin',1,'fontsize',fontsize)
 coord_b = [48,-77];
 geoplot([coord_b(1),car_plants.Latitude(29)],[coord_b(2),car_plants.Longitude(29)],'black')
-text(coord_b(1),coord_b(2),'Oakland','HorizontalAlignment','center','backgroundcolor','white','margin',1)
+text(coord_b(1),coord_b(2),'Oakland','HorizontalAlignment','center','backgroundcolor','white','margin',1,'fontsize',fontsize)
 coord_c = [50,-90];
 geoplot([coord_c(1),car_plants.Latitude(44)],[coord_c(2),car_plants.Longitude(44)],'black')
-text(coord_c(1),coord_c(2),'McLean','HorizontalAlignment','center','backgroundcolor','white','margin',1)
-legend([loc_ICE,loc_EV,loc_trans],'location','n','orientation','horizontal')
+text(coord_c(1),coord_c(2),'McLean','HorizontalAlignment','center','backgroundcolor','white','margin',1,'fontsize',fontsize)
+
+legend([loc_ICE,loc_EV,loc_trans],'location','n','orientation','horizontal','fontsize',fontsize)
+
 cmap = interp1(linspace(0,1,6),[252, 251, 249;215, 220, 234;161, 179, 215;101, 129, 191;47, 87, 171;11, 56, 157]./255,linspace(0,1,100)); %blue
 colormap([.5*ones(1,3);cmap]);
 cb = colorbar;
 cb.Label.String = "Auto Assembly Workers (1,000s)";
 cb.Location = 'south';
 cb.Limits = [0,45];
-cb.FontSize = 10;
+cb.FontSize = fontsize;
 gx = gca;
 gx.Basemap = 'none';
 gx.Grid = 'off';
@@ -83,5 +87,6 @@ geolimits([15.3977   54.3065],[-126.1638  -65.5263])
 
 t.Units = 'inches';
 t.OuterPosition(3:4) = [5 4];
+
 % exportgraphics(t,'US_auto_manuf_map.png','resolution',600)
 
