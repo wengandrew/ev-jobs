@@ -2,8 +2,7 @@
 
 July, 2024
 
-Data and code used in the paper "30% fewer workers for electric vehicle assembly": harbinger or myth?
-
+Data and code used in the paper "Higher labor intensity in US automotive assembly plants after transitioning to electric vehicles" submitted to Nature Communications.
 Authors: 
 - Andrew Weng (asweng@umich.edu)
 - Omar Y. Ahmed (oyahmed@umich.edu)
