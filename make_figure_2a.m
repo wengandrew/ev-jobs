@@ -2,7 +2,7 @@
 
 Data Organization and Figure Making Code for
 
-"30% fewer workers for electric vehicle assembly": harbinger or myth? 
+"Higher labor intensity in US automotive assembly plants after transitioning to electric vehicles"
 
 Authors: Andrew Weng, Omar Y. Ahmed, Gabriel Ehrlich, Anna Stefanopoulou
 
@@ -45,7 +45,7 @@ state_emp = table(state_names,emp_year,'variablenames',{'State','Employees'});
 x = outerjoin(states,state_emp,"LeftKey","Name","RightKey","State");
 rows = x.Name ~= "Hawaii" & x.Name ~= "Alaska";
 y = x(rows,:);
-car_plants = readtable('data/Car_Plants_2022.xlsx','range','A:D');
+car_plants = readtable('data/Auto_News/Car_Plants_2022.xlsx','range','A:D');
 car_plants.EV(isnan(car_plants.EV)) = 0;
 
 %% Make the figure

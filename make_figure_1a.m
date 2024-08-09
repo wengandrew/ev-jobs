@@ -2,7 +2,7 @@
 
 Data Organization and Figure Making Code for
 
-"30% fewer workers for electric vehicle assembly": harbinger or myth? 
+"Higher labor intensity in US automotive assembly plants after transitioning to electric vehicles"
 
 Authors: Andrew Weng, Omar Y. Ahmed, Gabriel Ehrlich, Anna Stefanopoulou
 
